@@ -1,4 +1,8 @@
-<?php include 'init.php' ?>
+<?php 
+      require 'init.php' ;
+      session_start();
+
+?>
 <!doctype html>
 <html class="no-js" lang="zxx">
 
@@ -30,20 +34,20 @@
     <link rel="stylesheet" href="<?= $css ?>style.css">
     <link rel="stylesheet"  href="<?= $css ?>bootstrap.min2.css"/>
 
-        <link rel="stylesheet" type="text/css" href="<?= $css ?>style2.css"/> 
-        <link rel="stylesheet" href="<?= $css ?>owl-carousel.css"/>
-
-        
+    <link rel="stylesheet" type="text/css" href="<?= $css ?>style2.css"/> 
+    <link rel="stylesheet" href="<?= $css ?>owl-carousel.css"/>
 
     <!--  -----------------  -->
-
-
-
     <link rel="stylesheet"  href="<?= $css ?>bootstrap2.min.css"/>
-        <link rel="stylesheet"  href="<?= $css ?>AdminStyle.css"/> 
+    <link rel="stylesheet"  href="<?= $css ?>AdminStyle.css"/> 
     <link rel="stylesheet" type="text/css" href="<?= $css ?>Stylesheet.css">
 
+
+    <!-- JS Here-->
+
+    
 </head>
+
 
 <body>
     <!-- header-start -->
@@ -56,17 +60,17 @@
                             <div class="main-menu  d-none d-lg-block">
                                 <nav>
                                     <ul id="navigation">
-                                        <li><a  href="index.php">Home</a></li>
-                                        <li><a href="Menu.php">Menu</a></li>
-                                        <li><a href="about.php">About</a></li>
-                                        <li><a href="contact.php">Contact</a></li>
+                                        <li><a  href="../index.php">Home</a></li>
+                                        <li><a href="../Menu.php">Menu</a></li>
+                                        <li><a href="../about.php">About</a></li>
+                                        <li><a href="../contact.php">Contact</a></li>
                                     </ul>
                                 </nav>
                             </div>
                         </div>
                         <div class="col-xl-2 col-lg-2">
                             <div class="logo-img">
-                                <a href="index.php">
+                                <a href="../index.php">
                                     <img src="<?= $img ?>logo.png" alt="">
                                 </a>
                             </div>
@@ -101,7 +105,7 @@
                                     <a class="towHomeBtn">Admin</a>
                                 </div>
                                 <div class="book_btn d-none d-xl-block">
-                                    <a class="towHomeBtn" href="login.php">Log Out</a>
+                                    <a class="towHomeBtn" href="../login.php">Log Out</a>
                                 </div>
                             </div>
                         </div>
@@ -118,8 +122,7 @@
 
 
 
-<!--           -->
-		<h2 class="helloAdmin" >Welcome Admin</h2>
+<h2 class="helloAdmin" >Welcome Admin</h2>
 
     <div class="panel panel-default">
             
@@ -129,20 +132,12 @@
         <div id="collapse-shipping-address" class="panel-collapse collapse in" aria-expanded="true" style="margin-top: 25px">
                 <div class="panel-body">
 
-                    <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+                    <form class="form-horizontal" action="addProduct.php" method="POST" enctype="multipart/form-data">
                         
                         <div class="form-group">
-                          <label class="control-label col-sm-2" for="Categories">Product ID</label>
-                          <div class="col-sm-10">
-                            <input type="text" class="form-control" id="email" placeholder="Type an unique id " name="Pid" required>
-                          </div>
-                        </div>
-
-
-                        <div class="form-group">
-                          <label class="control-label col-sm-2" for="pwd">Food Name</label>
+                          <label class="control-label col-sm-2" for="name">Food Name</label>
                          	 <div class="col-sm-10">          
-                            	<input type="text" class="form-control" id="pwd" placeholder="Type the food name " name="foodName" required>
+                            	<input type="text" class="form-control" id="name" placeholder="Type the food name " name="foodName" required>
                       		</div>
                         </div>
 
@@ -163,7 +158,17 @@
                         <div class="form-group">
                           <label class="control-label col-sm-2" for="email">Photo Of Food</label>
                           <div class="col-sm-10">
-                            <input type="file" class="form-control" name="image" >
+                            <input type="file" class="form-control" name="image" required>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="control-label col-sm-2" for="Special">Special</label>
+                          <div class="col-sm-10">
+                            <select name = "Special" style="width: 100%;height: 35px ;font-family: 'Bellota';font-size: 20px;color: black">
+			                      <option >Yes</option>
+			                      <option selected>No</option>
+                   	 		</select>
                           </div>
                         </div>
 
@@ -180,6 +185,7 @@
                         <div class="form-group">        
                           <div class="col-sm-offset-2 col-sm-10">
                            <button type="submit" class="btn btn-default">Submit</button>
+                           
                           </div>
                         </div>
                     </form>
@@ -189,262 +195,177 @@
     <!--add food end-->
 
     <!-- All Food start -->
+
+<?php 
+    $pro = new products();
+    $All_Products = $pro->getProducts();
+    
+?>
     <div class="panel panel-default">
            <div class="panel-heading" >
                  <h4 class="panel-title"><a class="accordion-toggle" data-parent="#accordion" data-toggle="collapse" href="#collapse-shipping-method">ALL Food <i class="fa fa-caret-down"></i></a></h4>
             </div>
 
-            <div id="collapse-shipping-method" class="panel-collapse collapse in" aria-expanded="true" style="">
+            <div id="collapse-shipping-method" class="panel-collapse collapse in" aria-expanded="true" >
                 <div class="panel-body">
-
                 <table border="1" style="border-color:gray ; width:1200px ; text-align: center; margin-left: 35px; margin-top: -120px"   >
                     <thead style="font-family: 'East Sea Dokdo', cursive; font-size: 25px">
                         <tr style="background-color:#F54300 ;color:white;"> 
-                        	<th style="text-align: center;" >Product Id </th>
-                            <th style="text-align: center;"> Name </th>
-                            <th style="text-align: center;"> PRICE : $ </th>
+                        	<th style="text-align: center;width: 3%" >PRODUCT ID </th>
+                            <th style="text-align: center;width: 20%"> NAME </th>
                             <th style="text-align: center;"> DESCREPTION </th>
-                            <th style="text-align: center;"> DELETE </th>
-                            <th style="text-align: center;"> Availability </th>
+                            <th style="text-align: center;width: 10%"> PRICE : $</th>
+                            <th style="text-align: center;width: 11%"> AVAILABILITY </th>
+                            <th style="text-align: center;width: 4%"> SPECIAL </th>
+                            <th style="text-align: center;width: 5%"> EDIT </th>
+                            <th style="text-align: center;width: 4%"> DELETE </th>
                         </tr>
                 	</thead>
-
-
+                    <?php
+                        if(!empty($All_Products))
+                        {
+                            //loop the data 
+                            foreach($All_Products as $row)
+                            {
+                    ?>
 	                <tbody>
-	                <tr class = "tabelrow" >
-	                	<td style='text-align:center'>1</td>
-	                <td  style="padding: 10px;" >
+                    <div style="margin-top: -5px">
+                        <tr class = "tabelrow" >
+                            <td style='text-align:center;'><?= $row['Pro_Id']?></td>
+                            
+                            <td  style="padding: 10px;" >
+                            <?= $row['Pro_Name']?>
+                            </td>
 
-                    <input value="Burger Boys"  name="foodName" type="text"  style="width: 100%;border: 0px" >
- 
-                    </td>
+                            <td style='text-align:center'> <?= $row['Pro_Desc']?> </td>
 
-	                <td style='text-align:center'><input value="10$"  name="price" type="text"  style="width: 35%;border: 0px"></td>
-	               
-                    <td style='text-align:center'><input value="A lean grilled burger patty on a multi grain bread"  name="desc" type="text"  style="width: 90%;border: 0px">
-                    </td>
-	                
-                    <td style="width: 7%"><a ><img src="<?= $img ?>drop-icon.png" title="delete User" width="35px" style="margin-left: 5px;"></a>
-	                 <td>
-                        <div class="col-sm-10">
-                            <select name = "Availability" style="width: 130%;height: 35px ;font-family: 'Bellota';font-size: 20px;color: black;margin-right: 100px;border: 0px; ">
-                                  <option >Available</option>
-                                  <option >Not Available</option>
-                            </select>
-                          </div>
-                     </td>  
-	                </tr>
+                            <td style='text-align:center;' > <?= $row['Pro_Price']?>$</td>
+                            
+                            <td>
+                                <div class="col-sm-10">
+                                    <?= ($row['Pro_Statue'] == 1)  ? 'Avaliable' : 'Not Avaliable'; ?>
+                                </div>
+                            </td> 
 
-	           		 </br>
-                <!-- ------------------------>
-	           		<tr class = "tabelrow" style="  background-color: white;">
-	           			<td style='text-align:center'>2</td>
-	                <td style='text-align:center'>Burger Boys</td>
-	                <td style='text-align:center'>5$</td>
-	                <td style='text-align:center'>A lean grilled burger patty on a multi grain bread bun with light buffalo sauce and light cheddar cheese</td>
-                    <td style="width: 7%"><a ><img src="<?= $img ?>drop-icon.png" title="delete User" width="35px" style="margin-left: 5px;"></a>
-                	 <td style='text-align:center'>Non Avaliable</td>  
-	                </tr>
+                            <td style='text-align:center'> <?= ($row['Special']) ? 'Yes' : 'No' ?> </td>
 
-	                </br>
+                            <td style="width: 7%"><a href=""><img src="<?= $img ?>edit.png" title="Edit this Product" width="55px" style="margin-left: 5px;"></a>
 
-	                <tr class = "tabelrow" style="  background-color: white;">
-	                	<td style='text-align:center'>3</td>
-	                <td style='text-align:center'>Burger Bizz</td>
-	                <td style='text-align:center'>3$</td>
-	                <td style='text-align:center'>A lean grilled burger patty wrapped in fresh whole romaine lettuce, light buffalo sauce and light cheddar cheese</td>
-                    <td style="width: 7%"><a ><img src="<?= $img ?>drop-icon.png" title="delete User" width="35px" style="margin-left: 5px;"></a>
-                	 <td style='text-align:center'>NonAvaliable</td>  
-	                </tr>
+                            <td style="width: 7%"><a  onclick="" ><img src="<?= $img ?>drop-icon.png" title="" width="35px" style="margin-left: 5px;"></a>
 
-	           		 </br>
+                        </tr>
+                    </div>  
+                     <br />     
+                       <?php
+                                }
+                             }else
+                             {
 
-	                
-	                <tr class = "tabelrow" style="  background-color: white;">
-	                	<td style='text-align:center'>4</td>
-	                <td style='text-align:center'>Crackles Burger</td>
-	                <td style='text-align:center'>12$</td>
-	                <td style='text-align:center'>Triple the beef, triple the taste , triple the experience, triple the cheese</td>
-                    <td style="width: 7%"><a ><img src="<?= $img ?>drop-icon.png" title="delete User" width="35px" style="margin-left: 5px;"></a>
-	                 <td style='text-align:center'>Avaliable</td>  
-	                </tr>
-
-	           		 </br>
-
-	                
-	                <tr class = "tabelrow" style="  background-color: white;">
-	                	<td style='text-align:center'>5</td>
-	                <td style='text-align:center'>Bull Burgers</td>
-	                <td style='text-align:center'>7$</td>
-	                <td style='text-align:center'>Crispy mushroom and bacon with cheddar cheese and creamy buffalo sauce, drizzled with smokey bbq sauce</td>
-                    <td style="width: 7%"><a ><img src="<?= $img ?>drop-icon.png" title="delete User" width="35px" style="margin-left: 5px;"></a>
-	                 <td style='text-align:center'>Avaliable</td>  
-	                </tr>
-
-	           		 </br>
-
-	                
-	                <tr class = "tabelrow" style="  background-color: white;">
-	                	<td style='text-align:center'>6</td>
-	                <td style='text-align:center'>Rocket Burgers</td>
-	                <td style='text-align:center'>15$</td>
-	                <td style='text-align:center'>The quintessence of burger made with our signature buffalo sauce and clean cut beef patties</td>
-                    <td style="width: 7%"><a ><img src="<?= $img ?>drop-icon.png" title="delete User" width="35px" style="margin-left: 5px;"></a>
-	                 <td style='text-align:center'>Avaliable</td>  
-	                </tr>
-
-
-	           		 </br>
-	                
-	                <tr class = "tabelrow" style="  background-color: white;">
-	                	<td style='text-align:center'>7</td>
-    	                <td style='text-align:center'>Smokin Burger</td>
-    	                <td style='text-align:center'>11$</td>
-    	                <td style='text-align:center'>Mexican jalapeños, spicy buffalo sauce, and cheddar cheese</td>
-                        <td style="width: 7%"><a ><img src="<?= $img ?>drop-icon.png" title="delete User" width="35px" style="margin-left: 5px;"></a>
-    	                <td style='text-align:center'>Avaliable</td>  
-	                </tr>
-
-	           		 </br>
-
-           		   <tr class = "tabelrow" style="  background-color: white;" >
-               		   	<td style='text-align:center'>8</td>
-    	                <td style='text-align:center'>Crackles Burger</td>
-    	                <td style='text-align:center'>8$</td>
-    	                <td style='text-align:center'>Jalapeño cheddar bites on a burger patty with creamy buffalo sauce</td>
-                        <td style="width: 7%"><a ><img src="<?= $img ?>drop-icon.png" title="delete User" width="35px" style="margin-left: 5px;"></a>
-    	                 <td style='text-align:center'>Non Avaliable</td>  
-	                </tr>
-
-	           		 </br>
-                     
-        			</tbody>
-    			</TABLE>
-
-                     </br> 
-                    <div class="form-group">        
-                              <div class="col-sm-offset-2 col-sm-10" style="margin-left: 650px">
-                               <button type="submit" class="btn btn-default">Save Changes</button>
-                    </div>
-                </div>
-
+                            ?>
+                            <tbody>
+                            <div style="margin-top: 130px; ">
+                                <tr class = "tabelrow" > 
+                                    <td colspan="7" >NO PRODUCTS YET</td>       
+                                </tr>
+                            </div>
+                            <?php
+                             }
+                            ?>
+                    </tbody>  
+            </table>
    		 	</div>
     	</div>
     </div>
 <!--  All Food end -->
 
 <!--All User start -->
+<?php 
+    $admin = new Admin();
+    $users = $admin->getUsers();
+
+    //Search by the name or Id
+    if(isset($_GET['search']))
+    {
+        $users  = $admin->searchUsers($_GET['search']);
+
+    }
+?>
+
 <!--                                All users Table                             -->
     <div class="panel panel-default">
          <div class="panel-heading">
             <h4 class="panel-title"><a class="accordion-toggle" data-parent="#accordion" data-toggle="collapse" href="#collapse-payment-method" aria-expanded="true">All USERS <i class="fa fa-caret-down"></i></a></h4>
+            
         </div>
 
         <div id="collapse-payment-method" class="panel-collapse collapse in" aria-expanded="true" style="">
-            <div class="panel-body">
+         
+        <div style="padding: 15px;margin-left: 35px">
+            <form class="form-horizontal" method="get" >
 
+                <div class="form-group" style="width: 90%;margin-bottom: -20px">
+                    <div class="col-sm-10">
+                    <input type="text" class="form-control" placeholder="Type To Search [ONLY SEARCH BY ID , NAME , USER TYPE] " name="search" value="<?= (isset($_GET['search']) ? $_GET['search'] : '') ?>" >
+                    </div>  
+
+                    <div class="col-sm-5" h style="margin-top: -50px;margin-left: 650px;">
+                    <button type="submit"  class="btn btn-default" style="height: 30px">Search</button>
+                    </div>  
+                </div>
+                
+                    
+            </form>
+        </div>
+
+            <div class="panel-body">
                     <table border="1" style="border-color:gray ; width:1200px ; text-align: center; margin-left: 35px; margin-top: -120px"   >
                     <thead style="font-family: 'East Sea Dokdo', cursive; font-size: 25px">
                         <tr style="background-color:#F54300 ;color:white;"> 
-                        		<th style="text-align: center;">Id</th>
+                                <th style="text-align: center;">Id</th>
+                                <th style="text-align: center;">Type</th>
                                 <th style="text-align: center;">Name</th>
                                 <th style="text-align: center;width: 20%">User Name</th>
-                                <th style="text-align: center;">Password</th>
                                 <th style="text-align: center;width:16%">Phone</th>
                                 <th style="text-align: center;width:30%">Address</th>
                                 <th style="text-align: center;"> DELETE </th>
 
                             </tr>
                         </thead>
-
+                        <?php
+                            if(!empty($users))
+                            {
+                                //loop the data 
+                                foreach($users as $row)
+                                {
+                        ?>
                         <tbody>
-                            <tr class = "tabelrow" > 
-                            	<td style='text-align:center'>1</td>
-                            <td style='text-align:center'>Hossam</td>
-                            <td style='text-align:center'>hossam@mail.com</td>
-                            <td style='text-align:center'>123</td>
-                            <td style='text-align:center'>01156826636</td>
-                            <td style='text-align:center'>Cairo</td>
-                            <td style="width: 7%"><a ><img src="<?= $img ?>drop-icon.png" title="delete User" width="35px" style="margin-left: 5px;"></a>
-                            </tr>
+                            <div style="margin-top: 130px">
+                                <tr class = "tabelrow" > 
+                                    <td style='text-align:center'><?= $row['Id'] ?></td>
+                                    <td style='text-align:center'><?= ($row['User_Type_Id'] == 1) ? 'Admin' : 'User' ?></td>
+                                    <td style='text-align:center'><?= $row['Name'] ?></td>
+                                    <td style='text-align:center'><?= $row['User_Name'] ?></td>
+                                    <td style='text-align:center'><?= $row['Phone'] ?></td>
+                                    <td style='text-align:center'><?= $row['Address'] ?></td>
+                                    <td style="width: 7%"><a  onclick="" ><img src="<?= $img ?>drop-icon.png" title="" width="35px" style="margin-left: 5px;"></a>
+                                </tr>
+                            </div>
+                            <?php
+                                }
+                             }else
+                             {
+
+                            ?>
+                            <tbody>
+                            <div style="margin-top: 130px; ">
+                                <tr class = "tabelrow" > 
+                                    <td colspan="7" >NO USERS</td>       
+                                </tr>
+                            </div>
+                            <?php
+                             }
+                            ?>
                             
-
-                        	<tr class = "tabelrow" > 
-                        		<td style='text-align:center'>2</td>
-                            <td style='text-align:center'>Safa</td>
-                            <td style='text-align:center'>safa@mail.com</td>
-                            <td style='text-align:center'>456</td>
-                            <td style='text-align:center'>Non</td>
-                            <td style='text-align:center'>Cairo</td>
-                            <td style="width: 7%"><a ><img src="<?= $img ?>drop-icon.png" title="delete User" width="35px" style="margin-left: 5px;"></a>
-                            </tr>
-                        	</br>
-
-                        	<tr class = "tabelrow" > 
-                        		<td style='text-align:center'>3</td>
-                            <td style='text-align:center'>Ebram</td>
-                            <td style='text-align:center'>ebram@mail.com</td>
-                            <td style='text-align:center'>789</td>
-                            <td style='text-align:center'>Non</td>
-                            <td style='text-align:center'>Cairo</td>
-                            <td style="width: 7%"><a ><img src="<?= $img ?>drop-icon.png" title="delete User" width="35px" style="margin-left: 5px;"></a>
-                            </tr>
-                        	</br>
-
-                        	<tr class = "tabelrow" > 
-                        		<td style='text-align:center'>4</td>
-                            <td style='text-align:center'>Shrouk</td>
-                            <td style='text-align:center'>shrouk@mail.com</td>
-                            <td style='text-align:center'>153</td>
-                            <td style='text-align:center'>Non</td>
-                            <td style='text-align:center'>Cairo</td>
-                            <td style="width: 7%"><a ><img src="<?= $img ?>drop-icon.png" title="delete User" width="35px" style="margin-left: 5px;"></a>
-                            </tr>
-                        	</br>
-
-                        	<tr class = "tabelrow" > 
-                        		<td style='text-align:center'>5</td>
-                            <td style='text-align:center'>Esraa</td>
-                            <td style='text-align:center'>esraa@mail.com</td>
-                            <td style='text-align:center'>486</td>
-                            <td style='text-align:center'>Non</td>
-                            <td style='text-align:center'>Cairo</td>
-                            <td style="width: 7%"><a ><img src="<?= $img ?>drop-icon.png" title="delete User" width="35px" style="margin-left: 5px;"></a>
-                            </tr>
-                        	</br>
-
-                        	<tr class = "tabelrow" > 
-                        		<td style='text-align:center'>6</td>
-                            <td style='text-align:center'>Eslam</td>
-                            <td style='text-align:center'>eslam@mail.com</td>
-                            <td style='text-align:center'>183</td>
-                            <td style='text-align:center'>Non</td>
-                            <td style='text-align:center'>Cairo</td>
-                            <td style="width: 7%"><a ><img src="<?= $img ?>drop-icon.png" title="delete User" width="35px" style="margin-left: 5px;"></a>
-                            </tr>
-                        	</br>
-
-                        	<tr class = "tabelrow" > 
-                        		<td style='text-align:center'>7</td>
-                            <td style='text-align:center'>Admed</td>
-                            <td style='text-align:center'>esraa@mail.com</td>
-                            <td style='text-align:center'>154</td>
-                            <td style='text-align:center'>01164541578</td>
-                            <td style='text-align:center'>Cairo</td>
-                            <td style="width: 7%"><a ><img src="<?= $img ?>drop-icon.png" title="delete User" width="35px" style="margin-left: 5px;"></a>
-                            </tr>
-                        	</br>
-
-                        	<tr class = "tabelrow" > 
-                        		<td style='text-align:center'>8</td>
-                            <td style='text-align:center'>Mohamed</td>
-                            <td style='text-align:center'>mohamed@mail.com</td>
-                            <td style='text-align:center'>114</td>
-                            <td style='text-align:center'>01015484154</td>
-                            <td style='text-align:center'>Cairo</td>
-                            <td style="width: 7%"><a ><img src="<?= $img ?>drop-icon.png" title="delete User" width="35px" style="margin-left: 5px;"></a>
-                            </tr>
-                        	</br>
                         </tbody>
                     </table>
                 </div>
@@ -555,4 +476,4 @@
 
     <!-- -----------------------------------------  -->
 
-    <?php include $tpl."footer.php"; ?>
+    <?php  $tpl."footer.php"; ?>
