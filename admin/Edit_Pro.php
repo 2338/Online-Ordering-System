@@ -1,19 +1,69 @@
-<?php 
-    require 'init.php' ;
+<?php
+    require_once 'init.php';
     session_start();
+    //To prevent opening this page directly
     if(!isset($_SESSION['Id']))
     {
-        header("Location: ../login.php");
+        header("Location: login.php");
     }
 
+    $pro = new products();
+
+    $error_fields = array();
+
+$id = filter_input(INPUT_GET,'id',FILTER_SANITIZE_NUMBER_INT);
+
+
+if($_SERVER['REQUEST_METHOD'] == 'POST')
+{
+    //Validation
+    if(!(isset($_POST['name']) && !empty($_POST['name']))) 
+    {
+        $error_fields[] = "name";
+    }
+    if(!(isset($_POST['desc'])))
+    {
+        $error_fields[] = "desc";
+    }
+    if(!(isset($_POST['price']) && is_numeric($_POST['price']))) 
+    {
+        $error_fields[] = "price";
+    }
+    if(!(isset($_POST['availability']) && !empty($_POST['availability']))) 
+    {
+        $error_fields[] = "availability";
+    }
+
+    if(!$error_fields)
+    {
+        $Pro_id =  filter_input(INPUT_GET,'id',FILTER_SANITIZE_NUMBER_INT);
+        $name = $_POST['name'];
+        $desc = $_POST['desc'];
+        $price =$_POST['price'];
+        $availability =($_POST['availability'] == 'Avaliable') ? 1 : 0;    
+        //prepare data for update
+        $data = array(" Pro_Name " => $name ," Pro_Desc " => $desc, " Pro_Price " => $price , " Pro_Statue " => $availability);
+        
+        //Update the data in DB
+        if($pro->updatePro($data ,$Pro_id))
+        {
+            echo("<script language='javascript'>alert('Product Updated Successfuly')</script>");
+            header("Location: Edit_Pro.php?id=".$Pro_id);
+        }else
+        {
+            echo("<script language='javascript'>alert('Unable to Update Data')</script>");
+        }   
+    }
+}
 ?>
+
 <!doctype html>
 <html class="no-js" lang="zxx">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>User Account</title>
+    <title>Edit Product</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -44,9 +94,17 @@
     <!--  -----------------  -->
     <!--  -----------------  -->
     <link rel="stylesheet"  href="<?= $css ?>bootstrap2.min.css"/>
-        <link rel="stylesheet"  href="<?= $css ?>AdminStyle.css"/> 
-    <!-- <link rel="stylesheet" href="<?= $css ?>responsive.css"> -->
+    <link rel="stylesheet"  href="<?= $css ?>AdminStyle.css"/> 
     <link rel="stylesheet" type="text/css" href="<?= $css ?>Stylesheet.css">
+
+
+    <!----- JS Here ------->
+    <script>
+        function goBack() 
+        {
+            window.location.href = 'Admin_Home.php';
+        }
+    </script>
 
 </head>
 
@@ -102,11 +160,11 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="book_btn d-none d-xl-block" style="margin-right: 1px">
-                                    <a class="towHomeBtn" href="User_Home.php">My Account</a>
+                                <div class="book_btn d-none d-xl-block" style="margin-right: -35px">
+                                    <a class="towHomeBtn" href="<?= $adminHome?>">Admin</a>
                                 </div>
                                 <div class="book_btn d-none d-xl-block">
-                                    <a class="towHomeBtn" href="../logout.php">Log Out</a>
+                                    <a class="towHomeBtn" href="../login.php">Log Out</a>
                                 </div>
                             </div>
                         </div>
@@ -121,111 +179,73 @@
 <!-- header-end -->
 
 <!--     Greeting Msg      -->
-        <h2 class="helloAdmin" >Welcome <?=$_SESSION['Name'] ?></h2>
-<!-- User Info start -->
+<h2 class="helloAdmin" >Edit Product</h2>
+<!-- Product Info start -->
 
+    <?php
+        //get product Data
+        $this_product = $pro->getProduct($id);
+    ?>
   <div class="panel panel-default" style="margin-bottom: 50px">
         <div class="panel-heading">
-            <h4 class="panel-title"><a class="accordion-toggle" data-parent="#accordion" data-toggle="collapse" href="#collapse-checkout-confirm" aria-expanded="true">User Information <i class="fa fa-caret-down"></i></a></h4>
+            <h4 class="panel-title"><a class="accordion-toggle" data-parent="#accordion" data-toggle="collapse" href="#collapse-checkout-confirm" aria-expanded="true">Product Information <i class="fa fa-caret-down"></i></a></h4>
         </div>
             <div id="collapse-shipping-address" class="panel-collapse collapse in" aria-expanded="true" style="margin-top: 25px">
                 <div class="panel-body">
                     
-                    <form class="form-horizontal" action="Edit_User.php?id=<?=$_SESSION['Id'] ?>" method="POST" >
+                    <form class="form-horizontal"   method="POST" >
                         
                         <div class="form-group">
-                          <label class="control-label col-sm-2" for="Categories">Name</label>
+                          <label class="control-label col-sm-2" for="Categories">NAME</label>
                           <div class="col-sm-10">
-                            <input type="text" class="form-control" id="Name" value="<?= $_SESSION['Name'] ?>" name="name" require>
-
+                            <input type="text" class="form-control" id="Name" value="<?=$this_product['Pro_Name'] ?>" name="name" required>
                           </div>
                         </div>
 
                         <div class="form-group">
-                          <label class="control-label col-sm-2" for="UserName">UserName</label>
+                          <label class="control-label col-sm-2" for="DESCRIPTION">DESCRIPTION</label>
                              <div class="col-sm-10">          
-                                <input type="text" class="form-control" id="pwd" value="<?= $_SESSION['User_Name'] ?>" readonly="readonly" name="username" required>
+                                <input type="text" class="form-control" id="pwd" value="<?=$this_product['Pro_Desc'] ?>"  name="desc" required>
                             </div>
                         </div>
 
                         <div class="form-group">
-                          <label class="control-label col-sm-2" for="Password">Password</label>
+                          <label class="control-label col-sm-2" for="PRICE">PRICE</label>
                           <div class="col-sm-10">
-                            <input type="text" class="form-control"  value="<?= $_SESSION['Password'] ?>"  name="password" required>
+                            <input type="text" class="form-control"  value="<?=$this_product['Pro_Price'] ?>"  name="price" required>
                           </div>
                         </div>
 
                         <div class="form-group">
-                          <label class="control-label col-sm-2" for="Phone">Phone Number</label>
+                          <label class="control-label col-sm-2" for="AVAILABILITY">AVAILABILITY</label>
                           <div class="col-sm-10">
-                            <input type="text" class="form-control" id="Phone" value="<?= $_SESSION['Phone'] ?>" name="phone" required>
+                          <select name = "availability" style="width: 100%;height: 35px ;font-family: 'Bellota';font-size: 20px;color: black;margin-right: 100px ">
+                                        <option <?= ($this_product['Pro_Statue'] == 1 ) ? 'selected' : '' ?> >Avaliable </option>
+                                        <option  <?= ($this_product['Pro_Statue'] == 0 ) ? 'selected' : '' ?>>Not Avaliable </option>
+                            </select>
                           </div>
                         </div>
 
-                         <div class="form-group">
-                          <label class="control-label col-sm-2" for="Address">Address</label>
-                          <div class="col-sm-10">
-                            <input type="text" class="form-control" value="<?= $_SESSION['Address'] ?>" name="address" required>
-                          </div>
-                        </div>
+                      
                            
                         <div class="form-group">        
-                          <div class="col-sm-offset-2 col-sm-10">
+                          <div class="col-sm-offset-2 col-sm-10" style="margin-left: 225px">
                            <button type="submit" class="btn btn-default">Save Changes</button>
                           </div>
                         </div>
                   
                     </form>
+                    <!-- Back Button --> 
+                    <div class="form-group">        
+                          <div class="col-sm-offset-2 col-sm-10">
+                          <button  class="btn btn-default"   onclick="goBack()">Back</button>
+                          </div>
+                    </div>
                 </div>                                           
              </div>
    </div>
 
 
-<!-- User Info end -->
+<!-- Product Info end -->
 
-
-<!-- All Orders start -->
-
-  <div class="panel panel-default" style="margin-bottom: 50px;margin-top: -30px">
-        <div class="panel-heading">
-            <h4 class="panel-title"><a class="accordion-toggle" data-parent="#accordion" data-toggle="collapse" href="#collapse-checkout-confirm" aria-expanded="true">ORDERS History <i class="fa fa-caret-down"></i></a></h4>
-        </div>
-            <div id="collapse-checkout-confirm" class="panel-collapse collapse in" aria-expanded="true" >
-                <div class="panel-body">
-
-                    <table border="1" style="border-color:gray ; width:1200px ; text-align: center; margin-left: 35px; margin-top: 0px"   >
-                    <thead style="font-family: 'East Sea Dokdo', cursive; font-size: 25px">
-                        <tr style="background-color:#F54300 ;color:white;"> 
-                                <th style="text-align: center;">Order ID</th>
-                                <th style="text-align: center;">Order Desc.</th>
-                                <th style="text-align: center;">Date</th>
-                                <th style="text-align: center;">Total Cost</th>
-                                <th style="text-align: center;">Statue</th>
-
-                            </tr>
-                        </thead>
-
-                        <tbody> 
-                            
-                            <tr class = "tabelrow">
-                            <td style='text-align:center'>1</td>
-                            <td style='text-align:center'>1</td>
-                            <td style='text-align:center'>1</td>
-                            <td style='text-align:center'>1 $</td>
-                            <td style='text-align:center'>1</td>
-                            </tr>
-                            </br>
-                            
-                        </tbody>    
-
-                    </table>
-                </div>
-            </div>
-   </div>
-
-
-<!-- All orders end -->
-
-    <!-- -----------------------------------------  -->
-
-    <?php require $tpl."footer.php"; ?>
+<?php  require_once $tpl.'footer.php'; ?>

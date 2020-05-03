@@ -1,4 +1,48 @@
-<?php include 'init.php'; ?>
+<?php 
+ require_once 'init.php';
+        session_start();
+$error='';
+if ($_SERVER['REQUEST_METHOD'] == "POST")
+{
+    if (isset($_POST['username']) && !empty($_POST['password']) && isset($_POST['password']) && !empty($_POST['username'])) {
+        
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        $user = new User();
+        $userdata = $user ->getUserForLogin($username,$password);
+
+        if (!empty($userdata))
+        {
+            $_SESSION['Id']=$userdata['Id'];
+            $_SESSION['Name']=$userdata['Name'];
+            $_SESSION['User_Name']=$userdata['User_Name'];
+            $_SESSION['Password']=$userdata['Password'];
+            $_SESSION['Phone']=$userdata['Phone'];
+            $_SESSION['Address']=$userdata['Address'];
+            $_SESSION['User_Type_Id']=$userdata['User_Type_Id'];
+
+        
+            if ($userdata['User_Type_Id'] == 1) {
+                header("location: ".$adminHome);
+
+            }
+            elseif ($userdata['User_Type_Id'] == 2) {
+                header("location: index.php");
+
+            }
+        }
+        else
+        {
+            $error = 1;   
+        }    
+    }
+   
+}
+
+?>
+
+
 
 <!doctype html>
 <html class="no-js" lang="zxx">
@@ -31,6 +75,21 @@
     <!--here signuo only -->
     <link rel="stylesheet" type="text/css" href="<?= $css ?>Stylesheet.css">
 
+    <!-- JS HERE -->
+    <script>
+        function showPass() 
+        {
+            var x = document.getElementById("pass");
+            if (x.type === "password") 
+            {
+                x.type = "text";
+            } else
+            {
+                x.type = "password";
+            }
+        }
+    </script>
+
 </head>
 
 <body>
@@ -62,14 +121,25 @@
     <!-- sign up -start -->
     <div class="signup" >
             <h2 class="h_signup">Log In</h2>
-            <form action="index.php" target="_self" method="post">
+            <form action="<?= $_SERVER['PHP_SELF'] ?>"  method="POST">
                 
                 User Name:<br>
-                <input class="Form_input" type="text" name="username" placeholder="Type your username..." required><br>
+                <input class="Form_input" type="text" name="username" placeholder="Type your username..."  value="<?= (isset($_POST['username'])) ? $_POST['username'] : '' ?>" required><br>
+
                 Password:<br>
-                <input class="Form_input" type="password" name="password" placeholder="Type your password..." required><br>
+                <input class="Form_input" type="password" id = "pass" name="password" placeholder="Type your password..." value="<?= (isset($_POST['password'])) ? $_POST['password'] : '' ?>" required><br>
                 
+                <input type="checkbox" onclick="showPass()" style="margin-left: -220px">    Show Password <br />
+
                 <input class="Form_input2" type="submit" name="login" value="Login">
+                <?php
+                    if($error == 1)
+                    {?>
+                         <P class="login_p" style="color: red">Invalid username or password , Try Again </P>
+                    <?php    
+                        session_unset();//To Clear and Destroy the session
+                    }
+                ?>
                 <P class="login_p">If you don't have an account? <a class="span" href="Register.php">Create Now</a></P>
             </form>
             
