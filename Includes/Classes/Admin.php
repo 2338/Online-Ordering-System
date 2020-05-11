@@ -1,25 +1,19 @@
 <?php
 class Admin extends person 
 {
-    //Attributes
-    public $product ;
-    public $order;
+    
     /**
     *   Constructor
     *   just call parent Constructor
     */
     public function __construct() 
     {
-        //taking object from clsss Products to use its function 
-        $this->product = new products();
-        $this->order = new orders();
-
+        //call the parent constructor
         parent::__construct();
-
     }
 
     //Product Section
-
+    
     /**
      * Add New Product
      * @param array $pro_data  Associative array containing column and value
@@ -82,7 +76,6 @@ class Admin extends person
         return $this->product->searchProducts($keyword);
     }
    
-
     //User Section
     
     /*
@@ -92,9 +85,9 @@ class Admin extends person
     public function getUsers()
     {
         //call func select and pass tableName and * to return all details and Order By User_Type_Id
-        $this->select($this->_table,'','*','User_Type_Id');
+        $this->DB->select($this->_table,'','*','User_Type_Id');
 
-        return $this->fetchAll(); //retrun all data || false if no data 
+        return  $this->DB->fetchAll(); //retrun all data || false if no data 
     }
 
     /**
@@ -104,7 +97,7 @@ class Admin extends person
      */
     public function addUser($user_data)
     {
-        return $this->insert($this->_table,$user_data);
+        return  $this->DB->insert($this->_table,$user_data);
     }
 
     /**
@@ -114,7 +107,7 @@ class Admin extends person
     */
     public function checkUserName($username)
     {   
-       $countRow =  $this-> searchusername($this->_table , ' User_Name = "'.$username.'"');
+       $countRow =  $this->DB-> searchusername($this->_table , ' User_Name = "'.$username.'"');
 
        if($countRow == 1)
         {
@@ -130,7 +123,7 @@ class Admin extends person
      */
     public function deleteUser($user_Id)
     {
-        return $this->delete($this->_table  , 'Id = '.$user_Id);
+        return  $this->DB->delete($this->_table  , 'Id = '.$user_Id);
     }
 
     /**
@@ -165,8 +158,8 @@ class Admin extends person
             $query = " Name LIKE '%$keyword%' ";
         }
 
-        $this->select($this->_table  , $query,'*','User_Type_Id');
-        return $this->fetchAll();
+        $this->DB->select($this->_table  , $query,'*','User_Type_Id');
+        return $this->DB->fetchAll();
     }
 
     //Send Mail
